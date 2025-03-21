@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Make Payments to BWM-XMD Online Conveniently And At No Costs">
-    <meta property="og:title" content="BWM-XMD | M-PESA CHECKOUT">
+    <meta property="og:title" content="BWM-XMD | M-PESA Checkout">
     <meta property="og:image" content="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp">
-    <title>BWM-XMD | IBRAHIM ADAMS | M-PESA CHECKOUT</title>
+    <title>BWM-XMD | Ibrahim Adams | M-PESA Checkout</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -14,8 +14,12 @@
             color: #ffffff;
             margin: 0;
             padding: 0;
-            height: 500;
+            height: 100vh;
             transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         body.dark-mode {
@@ -36,10 +40,8 @@
             margin-bottom: 2rem;
         }
 
-      
-
         .payment-container {
-            margin: 2rem auto;
+            margin: 0 auto;
             padding: 2rem;
             max-width: 350px;
             background: rgba(255, 255, 255, 0.1);
@@ -176,7 +178,6 @@
             }
         }
 
-        /* Dark mode toggle button */
         .dark-mode-toggle {
             position: absolute;
             top: 20px;
@@ -201,52 +202,42 @@
     </style>
 </head>
 <body>
-    <!-- Dark mode toggle button -->
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌒</button>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌒</button>
 
-    <div class="header-image"></div>
+    <header class="logo-container">
+        <img src="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp" alt="BWM-XMD Logo">
+    </header>
 
-    <div class="logo-container">
-        <img src="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp" alt="Logo">
-    </div>
-
-    <h3>M-PESA CHECKOUT</h3>
-
-    <div class="payment-container">
-        <h3>PAY TO BWM XMD SERVICES</h3>
-        <p>Enter your Phone Number and Amount to make Payment Securely and Conveniently at no Costs.</p>
+    <main class="payment-container">
+        <h3>Pay to BWM XMD Services</h3>
+        <p>Enter your phone number and amount to make a payment securely and conveniently at no cost.</p>
         <form id="paymentForm">
             <label for="phone">Phone Number</label>
             <input type="text" id="phone" placeholder="Eg 07XXXXXXXX" required>
             <label for="amount">Amount</label>
             <input type="number" id="amount" placeholder="Eg 1, 10, 100, 200" required>
-            <button type="submit" id="payBtn">PAY NOW</button>
+            <button type="submit" id="payBtn">Pay Now</button>
         </form>
-    </div>
+    </main>
 
     <footer>
-        <p>©2025 Secured By <a href="https://github.com/ibrahimaitech">BWM-XMD | IBRAHIM ADAMS</a></p>
+        <p>©2025 Secured By <a href="https://github.com/ibrahimaitech">BWM-XMD | Ibrahim Adams</a></p>
     </footer>
 
     <div class="loader-overlay" id="loader" style="display: none;">
         <div>
             <div class="loader"></div>
-            <div class="loader-text">Please wait to enter mpesa pin...</div>
+            <div class="loader-text">Please wait to enter M-PESA PIN...</div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
-        // Dark mode toggle functionality
         function toggleDarkMode() {
             const body = document.body;
             body.classList.toggle('dark-mode');
             const darkModeToggle = document.querySelector('.dark-mode-toggle');
-            if (body.classList.contains('dark-mode')) {
-                darkModeToggle.textContent = '🌒';
-            } else {
-                darkModeToggle.textContent = '🌝';
-            }
+            darkModeToggle.textContent = body.classList.contains('dark-mode') ? '🌒' : '🌝';
         }
 
         document.getElementById('paymentForm').addEventListener('submit', async (event) => {
@@ -287,7 +278,7 @@
                         html: `
                             Amount: <b>Ksh ${result.data.amount}</b><br>
                             Phone: <b>${result.data.phone}</b><br>
-                            Txn ID: <b>${result.data.refference}</b><br>
+                            Txn ID: <b>${result.data.reference}</b><br>
                         `,
                         icon: 'success',
                         showCancelButton: true,
@@ -295,7 +286,7 @@
                         cancelButtonText: 'Cancel',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = `https://paymenttech-6ec830ffcd8e.herokuapp.com?id=${result.data.refference}`;
+                            window.location.href = `https://paymenttech-6ec830ffcd8e.herokuapp.com?id=${result.data.reference}`;
                         }
                     });
                 } else {

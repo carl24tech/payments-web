@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifted Admin Panel</title>
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+     :root {
+            --bg: #0b071d;
+            --color: #6343da;
+            --glow: 0 0 15px var(--color);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg);
+            color: #fff;
+        }
+
+        .wrapper {
+            width: 90%;
+            max-width: 800px;
+            background: transparent;
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glow);
+            border-radius: 20px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .admin-panel {
+            width: 100%;
+        }
+
+        .admin-panel h2 {
+            font-size: 32px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: var(--glow);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 2px solid var(--color);
+            border-radius: 40px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--color);
+            box-shadow: var(--glow);
+        }
+
+        .user-list {
+            margin-top: 20px;
+        }
+
+        .user-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: var(--glass-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .user-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-item p {
+            margin: 5px 0;
+        }
+
+        .user-item button {
+            margin: 5px;
+            background: var(--color);
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .user-item button:hover {
+            background: var(--neon-pink);
+            box-shadow: var(--glow);
+        }
+
+        .user-item button.delete {
+            background: #ff4d4d;
+        }
+
+        .user-item button.delete:hover {
+            background: #ff1a1a;
+            box-shadow: 0 0 15px #ff1a1a;
+        }
+
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-box label {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #fff;
+            pointer-events: none;
+            transition: top 0.3s ease, font-size 0.3s ease, color 0.3s ease;
+        }
+
+        .input-box input:focus~label,
+        .input-box input:valid~label {
+            top: -5px;
+            font-size: 12px;
+            color: var(--color);
+        }
+        /* Dark mode theme for SweetAlert */
+        .swal2-popup {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        .swal2-input {
+            background-color: #2d2d2d;
+            color: #ffffff;
+            border: 1px solid #444;
+        }
+        .swal2-input::placeholder {
+            color: #888;
+        }
+        .swal2-confirm {
+            background-color: #007bff;
+        }
+        .swal2-cancel {
+            background-color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="admin-panel">
+            <h2>Ibrahim Txns Panel</h2>
+
+            <!-- Fetch All Transactions Button -->
+            <button id="fetchTransactions" class="btn">Fetch All Transactions</button>
+
+            <!-- Search by Txn ID or Checkout ID -->
+            <button id="searchById" class="btn">Search by Txn/Checkout ID</button>
+
+            <!-- Search by Phone Number -->
+            <button id="searchByPhone" class="btn">Search by Phone Number</button>
+
+            <!-- Export All Transactions Button -->
+            <button id="exportAllTransactions" class="btn">Export All Transactions</button>
+
+            <!-- Export Transactions by Phone Button -->
+            <button id="exportByPhone" class="btn">Export Transactions by Phone</button>
+
+            <!-- Transaction List -->
+            <div id="transactionList" class="user-list">
+                <!-- Transactions will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Fetch all transactions
+        document.getElementById('fetchTransactions').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/callback-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayTransactions(result);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: result.error || 'Failed to Fetch Transactions.',
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to Fetch Transactions.',
+                });
+            }
+        });
+
+        // Search by Txn ID or Checkout ID
+        document.getElementById('searchById').addEventListener('click', async () => {
+            const { value: id } = await Swal.fire({
+                title: 'Search by Txn ID or Checkout ID',
+                input: 'text',
+                inputLabel: 'Enter Txn ID or Checkout ID',
+                inputPlaceholder: 'e.g., TC66K1XBQA',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You need to enter a Txn ID or Checkout ID!';
+                    }
+                }
+            });
+
+            if (id) {
+                try {
+                    const response = await fetch(`/search-transaction?id=${id}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        if (result) {
+                            displayTransactions([result]); // Display single transaction
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Not Found',
+                                text: 'No transaction found with the provided ID.',
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: result.error || 'Failed to Search Transaction.',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error searching transaction:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to Search Transaction.',
+                    });
+                }
+            }
+        });
+
+        // Search by Phone Number
+        document.getElementById('searchByPhone').addEventListener('click', async () => {
+            const { value: phone } = await Swal.fire({
+                title: 'Search by Phone Number',
+                input: 'text',
+                inputLabel: 'Enter Phone Number',
+                inputPlaceholder: 'e.g., 0715206562',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You need to enter a phone number!';
+                    }
+                }
+            });
+
+            if (phone) {
+                try {
+                    const response = await fetch(`/search-by-phone?phone=${phone}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        if (result.length > 0) {
+                            displayTransactions(result); // Display all transactions for the phone number
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Not Found',
+                                text: 'No transactions found for the provided phone number.',
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: result.error || 'Failed to Search Transactions.',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error searching transactions by phone:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to Search Transactions.',
+                    });
+                }
+            }
+        });
+
+        // Export All Transactions
+        document.getElementById('exportAllTransactions').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/export-transactions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    // Trigger download
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'all_transactions.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to Export Transactions.',
+                    });
+                }
+            } catch (error) {
+                console.error('Error exporting transactions:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to Export Transactions.',
+                });
+            }
+        });
+
+        // Export Transactions by Phone
+        document.getElementById('exportByPhone').addEventListener('click', async () => {
+            const { value: phone } = await Swal.fire({
+                title: 'Export Transactions by Phone',
+                input: 'text',
+                inputLabel: 'Enter Phone Number',
+                inputPlaceholder: 'e.g., 0715206562',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You need to enter a phone number!';
+                    }
+                }
+            });
+
+            if (phone) {
+                try {
+                    const response = await fetch(`/export-transactions?phone=${phone}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        // Trigger download
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `transactions_${phone}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to Export Transactions.',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error exporting transactions:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to Export Transactions.',
+                    });
+                }
+            }
+        });
+
+        // Function to display transactions
+        const displayTransactions = (transactions) => {
+            const transactionList = document.getElementById('transactionList');
+            transactionList.innerHTML = ''; // Clear previous list
+
+            transactions.forEach(transaction => {
+                const transactionDiv = document.createElement('div');
+                transactionDiv.className = 'user-item';
+                transactionDiv.innerHTML = `
+                    <p><strong>Amount:</strong> ${transaction.Amount}</p>
+                    <p><strong>Phone:</strong> ${transaction.Phone}</p>
+                    <p><strong>Txn ID:</strong> ${transaction.TxnID}</p>
+                    <p><strong>Checkout ID:</strong> ${transaction.CheckoutID}</p>
+                    <div>
+                        <button onclick="editTransaction('${transaction.TxnID}')" class="btn">Edit</button>
+                        <button onclick="deleteTransaction('${transaction.TxnID}')" class="btn delete">Delete</button>
+                        <button onclick="exportTransaction('${transaction.TxnID}')" class="btn">Export</button>
+                    </div>
+                `;
+                transactionList.appendChild(transactionDiv);
+            });
+        };
+
+        // Function to export a single transaction
+        const exportTransaction = async (id) => {
+            try {
+                const response = await fetch(`/export-transactions?id=${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    // Trigger download
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `transaction_${id}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to Export Transaction.',
+                    });
+                }
+            } catch (error) {
+                console.error('Error exporting transaction:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to Export Transaction.',
+                });
+            }
+        };
+
+        // Function to edit a transaction
+        const editTransaction = (id) => {
+            // Fetch transaction details
+            fetch(`/search-transaction?id=${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result) {
+                    // Display the edit form in a SweetAlert pop-up
+                    Swal.fire({
+                        title: 'Edit Transaction',
+                        html: `
+                            <input type="text" id="editAmount" class="swal2-input" placeholder="Amount" value="${result.Amount}">
+                            <input type="text" id="editPhone" class="swal2-input" placeholder="Phone" value="${result.Phone}">
+                            <input type="text" id="editTxnID" class="swal2-input" placeholder="Txn ID" value="${result.TxnID}">
+                            <input type="text" id="editCheckoutID" class="swal2-input" placeholder="Checkout ID" value="${result.CheckoutID}">
+                        `,
+                        focusConfirm: false,
+                        showCancelButton: true,
+                        confirmButtonText: 'Update',
+                        preConfirm: async () => {
+                            const Amount = Swal.getPopup().querySelector('#editAmount').value;
+                            const Phone = Swal.getPopup().querySelector('#editPhone').value;
+                            const TxnID = Swal.getPopup().querySelector('#editTxnID').value;
+                            const CheckoutID = Swal.getPopup().querySelector('#editCheckoutID').value;
+
+                            // Validate required fields
+                            if (!Amount || !Phone || !TxnID || !CheckoutID) {
+                                Swal.showValidationMessage('Please Fill in All Required Fields');
+                                return false;
+                            }
+
+                            try {
+                                const response = await fetch(`/update-transaction/${id}`, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ Amount, Phone, TxnID, CheckoutID })
+                                });
+
+                                const result = await response.json();
+
+                                if (response.ok) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: result.message,
+                                    });
+                                    // Refresh the transaction list
+                                    document.getElementById('fetchTransactions').click();
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: result.error,
+                                    });
+                                }
+                            } catch (error) {
+                                console.error('Error updating transaction:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to Update Transaction.',
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: result.error,
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching transaction details:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to Fetch Transaction Details.',
+                });
+            });
+        };
+
+        // Function to delete a transaction
+        const deleteTransaction = (id) => {
+            Swal.fire({
+                title: 'Are You Sure?',
+                text: 'You are About to Delete a Transaction. This Action Cannot be Undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Delete it!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch(`/delete-transaction/${id}`, {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: data.message,
+                            });
+                            // Refresh the transaction list
+                            document.getElementById('fetchTransactions').click();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: data.error,
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error deleting transaction:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to Delete Transaction.',
+                        });
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>

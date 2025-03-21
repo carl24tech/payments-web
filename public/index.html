@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Make Payments to BWM-XMD Online Conveniently And At No Costs">
+    <meta property="og:title" content="BWM-XMD | M-PESA CHECKOUT">
+    <meta property="og:image" content="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp">
+    <title>BWM-XMD | IBRAHIM ADAMS | M-PESA CHECKOUT</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            height: 500;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #121212, #1e1e1e);
+            color: #ffffff;
+        }
+
+        h3 {
+            text-align: center;
+            color: inherit;
+            font-size: 25px;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            text-align: center;
+            color: inherit;
+            margin-bottom: 2rem;
+        }
+
+      
+
+        .payment-container {
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 350px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        body.dark-mode .payment-container {
+            background: rgba(30, 30, 30, 0.8);
+            color: #ffffff;
+        }
+
+        .payment-container input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode .payment-container input {
+            background: rgba(51, 51, 51, 0.8);
+            color: #ffffff;
+            border-color: rgba(85, 85, 85, 0.8);
+        }
+
+        .payment-container button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ff007f, #7f00ff);
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .payment-container button:hover {
+            background: linear-gradient(135deg, #7f00ff, #ff007f);
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .logo-container img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 3px solid #ff007f;
+        }
+
+        footer {
+            background-color: transparent;
+            color: inherit;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        footer a {
+            color: #ff007f;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #7f00ff;
+            text-decoration: none;
+        }
+
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 255, 255, 0.2);
+            border-top: 8px solid #ff007f;
+            border-right: 8px solid #7f00ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #ff007f, #7f00ff);
+            border-radius: 50%;
+        }
+
+        .loader-text {
+            margin-top: 1rem;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Dark mode toggle button */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: rgba(51, 51, 51, 0.8);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark mode toggle button -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌒</button>
+
+    <div class="header-image"></div>
+
+    <div class="logo-container">
+        <img src="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp" alt="Logo">
+    </div>
+
+    <h3>M-PESA CHECKOUT</h3>
+
+    <div class="payment-container">
+        <h3>PAY TO BWM XMD SERVICES</h3>
+        <p>Enter your Phone Number and Amount to make Payment Securely and Conveniently at no Costs.</p>
+        <form id="paymentForm">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" placeholder="Eg 07XXXXXXXX" required>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" placeholder="Eg 1, 10, 100, 200" required>
+            <button type="submit" id="payBtn">PAY NOW</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>©2025 Secured By <a href="https://github.com/ibrahimaitech">BWM-XMD | IBRAHIM ADAMS</a></p>
+    </footer>
+
+    <div class="loader-overlay" id="loader" style="display: none;">
+        <div>
+            <div class="loader"></div>
+            <div class="loader-text">Please wait to enter mpesa pin...</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Dark mode toggle functionality
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const darkModeToggle = document.querySelector('.dark-mode-toggle');
+            if (body.classList.contains('dark-mode')) {
+                darkModeToggle.textContent = '🌒';
+            } else {
+                darkModeToggle.textContent = '🌝';
+            }
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const phone = document.getElementById('phone').value.trim();
+            const amount = document.getElementById('amount').value.trim();
+
+            if (!phone || !amount) {
+                Swal.fire('Error', 'Please Fill in All Fields.', 'error');
+                return;
+            }
+
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+
+            try {
+                const response = await fetch('/api/pay.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, amount }),
+                });
+
+                const contentType = response.headers.get('Content-Type');
+                let result;
+
+                if (contentType && contentType.includes('application/json')) {
+                    result = await response.json();
+                } else {
+                    result = await response.text();
+                }
+
+                loader.style.display = 'none';
+
+                if (response.ok) {
+                    Swal.fire({
+                        title: 'Payment Successful',
+                        html: `
+                            Amount: <b>Ksh ${result.data.amount}</b><br>
+                            Phone: <b>${result.data.phone}</b><br>
+                            Txn ID: <b>${result.data.refference}</b><br>
+                        `,
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'Receipt',
+                        cancelButtonText: 'Cancel',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = `https://paymenttech-6ec830ffcd8e.herokuapp.com?id=${result.data.refference}`;
+                        }
+                    });
+                } else {
+                    Swal.fire('Error', result.message || 'Payment Failed, Please Try Again', 'error');
+                }
+            } catch (error) {
+                loader.style.display = 'none';
+                Swal.fire('Error', 'An Unexpected Error Occurred. Please Try Again.', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

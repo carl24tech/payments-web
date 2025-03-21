@@ -1,0 +1,12 @@
+{
+  "name": "mpesa-stk-push",
+  "description": "Automated STK Push for online payments",
+  "repository": "https://github.com/boitech",
+  "keywords": ["payment", "stk push", "express"],
+  "env": {
+    "API_KEY": {
+      "description": "Api Key",
+      "required": true
+    }
+  }
+}

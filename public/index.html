@@ -6,7 +6,7 @@
     <meta name="description" content="Make Payments to BWM-XMD Online Conveniently And At No Costs">
     <meta property="og:title" content="BWM-XMD | M-PESA Checkout">
     <meta property="og:image" content="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp">
-    <title>BWM-XMD | Ibrahim Adams | M-PESA Checkout</title>
+    <title>Carltech Mpesa Gateway</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -209,25 +209,25 @@
     </header>
 
     <main class="payment-container">
-        <h3>Pay to BWM XMD Services</h3>
+        <h3>Carltech Nexus Services</h3>
         <p>Enter your phone number and amount to make a payment securely and conveniently at no cost.</p>
         <form id="paymentForm">
             <label for="phone">Phone Number</label>
-            <input type="text" id="phone" placeholder="Eg 07XXXXXXXX" required>
+            <input type="text" id="phone" placeholder="Eg 07******" required>
             <label for="amount">Amount</label>
-            <input type="number" id="amount" placeholder="Eg 1, 10, 100, 200" required>
-            <button type="submit" id="payBtn">Pay Now</button>
+            <input type="number" id="amount" placeholder="Eg 10, 100, 1000, 2000" required>
+            <button type="submit" id="payBtn">Make Payments</button>
         </form>
     </main>
 
     <footer>
-        <p>©2025 Secured By <a href="https://github.com/ibrahimaitech">BWM-XMD | Ibrahim Adams</a></p>
+        <p>mpesagateway©2025 Secured By <a href="https://github.com/carl24tech">Carl William</a></p>
     </footer>
 
     <div class="loader-overlay" id="loader" style="display: none;">
         <div>
             <div class="loader"></div>
-            <div class="loader-text">Please wait to enter M-PESA PIN...</div>
+            <div class="loader-text">Please enter M-PESA PIN...</div>
         </div>
     </div>
 
@@ -237,7 +237,7 @@
             const body = document.body;
             body.classList.toggle('dark-mode');
             const darkModeToggle = document.querySelector('.dark-mode-toggle');
-            darkModeToggle.textContent = body.classList.contains('dark-mode') ? '🌒' : '🌝';
+            darkModeToggle.textContent = body.classList.contains('dark-mode') ? 'D' : 'L';
         }
 
         document.getElementById('paymentForm').addEventListener('submit', async (event) => {

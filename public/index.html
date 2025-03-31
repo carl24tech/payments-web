@@ -1,170 +1,21 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Make Payments to CARLTECH Online Conveniently At No Costs">
-    <meta property="og:title" content="CARLTECH">
-    <meta property="og:image" content="https://files.catbox.moe/hptv7o.jpg">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Make Payments to CARLTECH Online Conveniently At No Costs" name="description"/>
+    <meta content="CARLTECH" property="og:title"/>
+    <meta content="https://files.catbox.moe/hptv7o.jpg" property="og:image"/>
     <title>CARLTECH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            height: 500;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        body.dark-mode {
-            background: linear-gradient(135deg, #121212, #1e1e1e);
-            color: #ffffff;
-        }
-
-        h3 {
-            text-align: center;
-            color: inherit;
-            font-size: 25px;
-            margin-bottom: 1rem;
-        }
-
-        p {
-            text-align: center;
-            color: inherit;
-            margin-bottom: 2rem;
-        }
-
-      
-
-        .payment-container {
-            margin: 2rem auto;
-            padding: 2rem;
-            max-width: 350px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: background-color 0.3s;
-            position: relative;
-        }
-
-        body.dark-mode .payment-container {
-            background: rgba(30, 30, 30, 0.8);
-            color: #ffffff;
-        }
-
-        .payment-container input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        body.dark-mode .payment-container input {
-            background: rgba(51, 51, 51, 0.8);
-            color: #ffffff;
-            border-color: rgba(85, 85, 85, 0.8);
-        }
-
-        .payment-container button {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #ff007f, #7f00ff);
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            color: #ffffff;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            margin: 0 auto;
-            display: block;
-            transition: background-color 0.3s;
-        }
-
-        .payment-container button:hover {
-            background: linear-gradient(135deg, #7f00ff, #ff007f);
-        }
-
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 2rem 0;
-        }
-
-        .logo-container img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 3px solid #ff007f;
-        }
-
-        footer {
-            background-color: #ffff;
-            color: inherit;
-            font-weight: bold;
-            text-align: center;
-            padding: 1rem 0;
-        }
-
-        footer a {
-            color: #ff007f;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            color: #7f00ff;
-            text-decoration: none;
-        }
-
-        .loader-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .loader {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border: 8px solid rgba(255, 255, 255, 0.2);
-            border-top: 8px solid #ff007f;
-            border-right: 8px solid #7f00ff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loader::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(45deg, #ff007f, #7f00ff);
-            border-radius: 50%;
-        }
-
-        .loader-text {
-            margin-top: 1rem;
-            color: white;
-            font-size: 16px;
-            text-align: center;
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
         }
 
         @keyframes spin {
@@ -176,65 +27,82 @@
             }
         }
 
-        /* Dark mode toggle button */
-        .dark-mode-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .dark-mode-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
+        @keyframes slideInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        body.dark-mode .dark-mode-toggle {
-            background: rgba(51, 51, 51, 0.8);
-            color: #ffffff;
+        @keyframes slideInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-blue-900 to-blue-800 text-white min-h-screen flex flex-col items-center justify-center">
     <!-- Dark mode toggle button -->
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌒</button>
-
-    <div class="header-image"></div>
-
-    <div class="logo-container">
-        <img src="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp" alt="Logo">
+    <button class="dark-mode-toggle absolute top-5 right-5 bg-blue-700 text-white p-2 rounded-md" onclick="toggleDarkMode()">🌒</button>
+    <div class="logo-container my-8 animate-slideInLeft">
+        <img alt="A circular logo with a gradient border from teal to cyan" class="w-48 h-48 rounded-full border-4 border-teal-500" height="200" src="https://storage.googleapis.com/a1aa/image/MGtoo7cg8gVwM7UlS6Enchufd2GqSAytByNq_f_6V74.jpg" width="200"/>
     </div>
-
-    <h3>Payments</h3>
-
-    <div class="payment-container">
-        <h3>Securely pay to our services</h3>
-        <p>Enter your Phone Number and Amount to make Payment Securely and Conveniently at no Costs.</p>
-        <form id="paymentForm">
-            <label for="phone">Phone Number</label>
-            <input type="text" id="phone" placeholder="Eg 07XXXXXXXX" required>
-            <label for="amount">Amount</label>
-            <input type="number" id="amount" placeholder="Eg 1, 10, 100, 200" required>
-            <button type="submit" id="payBtn">Make Payment</button>
+    <h3 class="text-3xl font-bold mb-4 animate-bounce">Pay Happily</h3>
+    <div class="payment-container bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg max-w-md w-full animate-fadeIn">
+        <h3 class="text-xl font-semibold mb-4 text-center animate-slideInRight">Securely pay to our services</h3>
+        <p class="text-center mb-6 animate-slideInUp">Enter your Phone Number and Amount to make Payment Securely and Conveniently at no Costs.</p>
+        <form class="space-y-4" id="paymentForm">
+            <div>
+                <label class="block mb-2" for="phone">Phone Number</label>
+                <input class="w-full p-3 rounded-md bg-white bg-opacity-20 border border-white border-opacity-20 text-white" id="phone" placeholder="Eg 07XXXXXXXX" required="" type="text"/>
+            </div>
+            <div>
+                <label class="block mb-2" for="amount">Amount</label>
+                <input class="w-full p-3 rounded-md bg-white bg-opacity-20 border border-white border-opacity-20 text-white" id="amount" placeholder="Eg 1, 10, 100, 200" required="" type="number"/>
+            </div>
+            <button class="w-full py-3 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-md font-bold text-white shadow-md hover:from-cyan-500 hover:to-teal-500 transition-all" id="payBtn" type="submit">Make Payment</button>
         </form>
     </div>
-
-    <footer>
-        <p>©2025 Sponsored By <a href="https://github.com/carl24tech">carl24tech</a></p>
+    <footer class="mt-8 text-center">
+        <p>©2025 Sponsored By <a class="text-teal-500 hover:text-cyan-500" href="https://github.com/carl24tech">carl24tech</a></p>
     </footer>
-
-    <div class="loader-overlay" id="loader" style="display: none;">
-        <div>
-            <div class="loader"></div>
-            <div class="loader-text">Please  enter mpesa pin...</div>
+    <div class="loader-overlay fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden" id="loader">
+        <div class="text-center">
+            <div class="loader w-20 h-20 border-8 border-t-teal-500 border-r-cyan-500 border-white border-opacity-20 rounded-full animate-spin"></div>
+            <div class="loader-text mt-4 text-white text-lg">Please enter mpesa pin...</div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Dark mode toggle functionality

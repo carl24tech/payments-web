@@ -1,121 +1,242 @@
-
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Make Payments to BWM-XMD Online Conveniently And At No Costs">
-    <meta property="og:title" content="BWM-XMD | M-PESA Checkout">
-    <meta property="og:image" content="https://files.catbox.moe/9bmfsi.jpg">
-    <title>Carltech Mpesa Gateway</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <meta name="description" content="Make Payments to CARLTECH Online Conveniently At No Costs">
+    <meta property="og:title" content="CARLTECH">
+    <meta property="og:image" content="https://files.catbox.moe/hptv7o.jpg">
+    <title>CARLTECH</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            height: 500;
+            transition: background-color 0.3s, color 0.3s;
         }
-        .fade-in {
-            animation: fadeIn 4s ease-in-out;
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #121212, #1e1e1e);
+            color: #ffffff;
         }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+
+        h3 {
+            text-align: center;
+            color: inherit;
+            font-size: 25px;
+            margin-bottom: 1rem;
         }
-        .slide-in {
-            animation: slideIn 2s ease-in-out;
+
+        p {
+            text-align: center;
+            color: inherit;
+            margin-bottom: 2rem;
         }
-        @keyframes slideIn {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
+
+      
+
+        .payment-container {
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 350px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s;
+            position: relative;
         }
-        .pulse {
-            animation: pulse 2s infinite;
+
+        body.dark-mode .payment-container {
+            background: rgba(30, 30, 30, 0.8);
+            color: #ffffff;
         }
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
+
+        .payment-container input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
         }
-        .progress-bar {
-            width: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ff007f, #7f00ff);
-            animation: progress 3s infinite;
+
+        body.dark-mode .payment-container input {
+            background: rgba(51, 51, 51, 0.8);
+            color: #ffffff;
+            border-color: rgba(85, 85, 85, 0.8);
         }
-        @keyframes progress {
+
+        .payment-container button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ff007f, #7f00ff);
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .payment-container button:hover {
+            background: linear-gradient(135deg, #7f00ff, #ff007f);
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .logo-container img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 3px solid #ff007f;
+        }
+
+        footer {
+            background-color: #ffff;
+            color: inherit;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        footer a {
+            color: #ff007f;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #7f00ff;
+            text-decoration: none;
+        }
+
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 255, 255, 0.2);
+            border-top: 8px solid #ff007f;
+            border-right: 8px solid #7f00ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #ff007f, #7f00ff);
+            border-radius: 50%;
+        }
+
+        .loader-text {
+            margin-top: 1rem;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        @keyframes spin {
             0% {
-                width: 0;
+                transform: rotate(0deg);
             }
             100% {
-                width: 100%;
+                transform: rotate(360deg);
             }
         }
-        .multicolor-button {
-            background: linear-gradient(360deg, #ff007f, #7f00ff, #00ff7f, #007fff);
-            background-size: 400% 400%;
-            animation: gradient 5s ease infinite;
+
+        /* Dark mode toggle button */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+
+        .dark-mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: rgba(51, 51, 51, 0.8);
+            color: #ffffff;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen flex flex-col items-center justify-center transition-colors duration-300">
-    <button class="dark-mode-toggle absolute top-5 right-5 bg-white bg-opacity-10 text-white py-2 px-4 rounded-md cursor-pointer transition-colors duration-300 hover:bg-opacity-20" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌒</button>
+<body>
+    <!-- Dark mode toggle button -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌒</button>
 
-    <header class="logo-container my-8 fade-in">
-        <img src="https://files.catbox.moe/9bmfsi.jpg" alt="Carltech Logo" class="w-48 h-48 rounded-full border-4 border-pink-500 pulse">
-    </header>
+    <div class="header-image"></div>
 
-    <main class="payment-container bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg max-w-md w-full mx-auto transition-colors duration-300 slide-in">
-        <h3 class="text-center text-2xl mb-4">Carltech Nexus Services</h3>
-        <p class="text-center mb-8">Enter your phone number and amount to make a payment securely and conveniently at no cost.</p>
-        <form id="paymentForm" class="space-y-4">
-            <div>
-                <label for="phone" class="block mb-2">Phone Number</label>
-                <input type="text" id="phone" placeholder="Eg 07******" required class="w-full p-3 rounded-md bg-white bg-opacity-10 border border-white border-opacity-20 text-white transition-colors duration-300">
-            </div>
-            <div>
-                <label for="amount" class="block mb-2">Amount</label>
-                <input type="number" id="amount" placeholder="Eg 10, 100, 1000, 2000" required class="w-full p-3 rounded-md bg-white bg-opacity-10 border border-white border-opacity-20 text-white transition-colors duration-300">
-            </div>
-            <button type="submit" id="payBtn" class="w-full py-3 rounded-md font-bold text-white shadow-md transition-colors duration-300 multicolor-button">Make Payments</button>
+    <div class="logo-container">
+        <img src="https://bwm-xmd-files.vercel.app/bwmxmd_s1n829.webp" alt="Logo">
+    </div>
+
+    <h3>Payments</h3>
+
+    <div class="payment-container">
+        <h3>Securely pay to our services</h3>
+        <p>Enter your Phone Number and Amount to make Payment Securely and Conveniently at no Costs.</p>
+        <form id="paymentForm">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" placeholder="Eg 07XXXXXXXX" required>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" placeholder="Eg 1, 10, 100, 200" required>
+            <button type="submit" id="payBtn">Make Payment</button>
         </form>
-    </main>
+    </div>
 
-    <footer class="mt-8 text-center font-bold fade-in">
-        <p>mpesagateway©2025 Secured By <a href="https://github.com/carl24tech" class="text-pink-500 hover:text-purple-500 transition-colors duration-300">Carl William</a></p>
+    <footer>
+        <p>©2025 Sponsored By <a href="https://github.com/carl24tech">carl24tech</a></p>
     </footer>
 
-    <div class="loader-overlay fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden" id="loader">
-        <div class="w-3/4">
-            <div class="progress-bar"></div>
-            <div class="loader-text mt-4 text-center text-white text-lg">Please enter M-PESA PIN...</div>
+    <div class="loader-overlay" id="loader" style="display: none;">
+        <div>
+            <div class="loader"></div>
+            <div class="loader-text">Please  enter mpesa pin...</div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-  <script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
         // Dark mode toggle functionality
         function toggleDarkMode() {
             const body = document.body;

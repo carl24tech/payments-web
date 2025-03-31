@@ -115,12 +115,17 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-    <script>
+  <script>
+        // Dark mode toggle functionality
         function toggleDarkMode() {
             const body = document.body;
             body.classList.toggle('dark-mode');
             const darkModeToggle = document.querySelector('.dark-mode-toggle');
-            darkModeToggle.textContent = body.classList.contains('dark-mode') ? 'D' : 'L';
+            if (body.classList.contains('dark-mode')) {
+                darkModeToggle.textContent = '🌒';
+            } else {
+                darkModeToggle.textContent = '🌝';
+            }
         }
 
         document.getElementById('paymentForm').addEventListener('submit', async (event) => {
@@ -161,7 +166,7 @@
                         html: `
                             Amount: <b>Ksh ${result.data.amount}</b><br>
                             Phone: <b>${result.data.phone}</b><br>
-                            Txn ID: <b>${result.data.reference}</b><br>
+                            Txn ID: <b>${result.data.refference}</b><br>
                         `,
                         icon: 'success',
                         showCancelButton: true,
@@ -169,7 +174,7 @@
                         cancelButtonText: 'Cancel',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = `https://paymenttech-6ec830ffcd8e.herokuapp.com?id=${result.data.reference}`;
+                            window.location.href = `https://paymenttech-6ec830ffcd8e.herokuapp.com?id=${result.data.refference}`;
                         }
                     });
                 } else {

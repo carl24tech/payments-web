@@ -176,7 +176,7 @@
    <p class="text-center mb-6 animate-slideInUp">
     Enter your Phone Number and Amount to make Payment Securely and Conveniently at no Costs.
    </p>
-   <form class="space-y-4" id="paymentForm" novalidate="">
+   <form class="space-y-4" id="paymentForm">
     <div>
      <label class="block mb-2" for="phone">
       Your Phone Number
@@ -189,7 +189,7 @@
      </label>
      <input aria-label="Payment Amount" class="w-full p-3 rounded-md bg-white bg-opacity-20 border border-white border-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent" id="amount" min="1" placeholder="Amt 1, 10, 100, 200" required="" step="1" type="number"/>
     </div>
-    <button aria-label="Make Payment" class="w-full py-3 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-md font-bold text-white shadow-md hover:from-cyan-500 hover:to-teal-500 transition-all focus:outline-none focus:ring-4 focus:ring-cyan-400" id="payBtn" type="submit">
+    <button aria-label="Make Payment" class="w-full py-3 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-md font-bold text-white shadow-md hover:from-cyan-500 hover:to-teal-500 transition-all focus:outline-none focus:ring-4 focus:ring-cyan-400" id="payBtn" type="button">
      Make Payment
     </button>
    </form>
@@ -236,9 +236,10 @@
             }
         }
 
-        document.getElementById('paymentForm').addEventListener('submit', async (event) => {
+        // Payment form handling
+        document.getElementById('payBtn').addEventListener('click', async (event) => {
             event.preventDefault();
-
+            
             const phoneInput = document.getElementById('phone');
             const amountInput = document.getElementById('amount');
             const phone = phoneInput.value.trim();
@@ -277,7 +278,7 @@
 
                 if (logError) throw logError;
 
-                // Then process the payment as before
+                // Then process the payment
                 const response = await fetch('/api/pay.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

@@ -7,7 +7,7 @@
   <meta content="CARLTECH" property="og:title"/>
   <meta content="https://files.catbox.moe/hptv7o.jpg" property="og:image"/>
   <title>CARLTECH</title>
-  <!-- Added Supabase CDN -->
+  <!-- Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
@@ -160,18 +160,21 @@
       const body = document.body;
       body.classList.toggle('dark-mode');
       const darkModeToggle = document.querySelector('.dark-mode-toggle');
-      darkModeToggle.textContent = body.classList.contains('dark-mode') ? '🌝' : '🌒';
+      if (body.classList.contains('dark-mode')) {
+        darkModeToggle.textContent = '🌝';
+      } else {
+        darkModeToggle.textContent = '🌒';
+      }
     }
 
-    // Payment form handling
-    document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+    // Payment form handling with Supabase integration
+    document.getElementById('paymentForm').addEventListener('submit', async (event) => {
       event.preventDefault();
-      
+
       const phoneInput = document.getElementById('phone');
       const amountInput = document.getElementById('amount');
       const phone = phoneInput.value.trim();
       const amount = amountInput.value.trim();
-      const loader = document.getElementById('loader');
 
       // Basic validation
       const phonePattern = /^07\d{8}$/;
@@ -186,85 +189,103 @@
         return;
       }
 
-      // Show loader
+      const loader = document.getElementById('loader');
       loader.style.display = 'flex';
       loader.setAttribute('aria-hidden', 'false');
 
       try {
-        // 1. First log the payment to Supabase
-        const { data: paymentLog, error: logError } = await supabase
+        // 1. First create a payment record in Supabase
+        const { data: paymentRecord, error: createError } = await supabase
           .from('payments')
-          .insert([{ 
-            phone: phone, 
-            amount: amount, 
-            status: 'pending',
+          .insert([{
+            phone: phone,
+            amount: amount,
+            status: 'initiated',
             created_at: new Date().toISOString()
           }])
           .select();
-
-        if (logError) throw logError;
-
-        // 2. Process the payment (simulate API call)
-        // Replace this with your actual payment API call
-        const paymentResult = await processMpesaPayment(phone, amount);
         
-        // 3. Update payment status in Supabase
-        await supabase
-          .from('payments')
-          .update({ 
-            status: paymentResult.success ? 'completed' : 'failed',
-            reference: paymentResult.reference || null
-          })
-          .eq('id', paymentLog[0].id);
+        if (createError) throw createError;
 
-        // Hide loader
+        // 2. Process the payment with your API
+        const response = await fetch('/api/pay.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, amount }),
+        });
+
+        const contentType = response.headers.get('Content-Type');
+        let result;
+
+        if (contentType && contentType.includes('application/json')) {
+          result = await response.json();
+        } else {
+          result = await response.text();
+        }
+
         loader.style.display = 'none';
         loader.setAttribute('aria-hidden', 'true');
 
-        // Show result to user
-        if (paymentResult.success) {
+        if (response.ok) {
+          // 3. Update payment record in Supabase on success
+          await supabase
+            .from('payments')
+            .update({
+              status: 'completed',
+              reference: result.data.refference,
+              completed_at: new Date().toISOString()
+            })
+            .eq('id', paymentRecord[0].id);
+
           Swal.fire({
             title: 'Payment Successful',
             html: `
-              Amount: <b>Ksh ${amount}</b><br>
-              Phone: <b>${phone}</b><br>
-              Txn ID: <b>${paymentResult.reference}</b><br>
+              Amount: <b>Ksh ${result.data.amount}</b><br>
+              Phone: <b>${result.data.phone}</b><br>
+              Txn ID: <b>${result.data.refference}</b><br>
             `,
             icon: 'success',
             showCancelButton: true,
             confirmButtonText: 'Receipt',
-            cancelButtonText: 'Close',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = `https://payments-web.onrender.com?id=${paymentResult.reference}`;
+            cancelButtonText: 'Cancel',
+          }).then((swalResult) => {
+            if (swalResult.isConfirmed) {
+              window.location.href = `https://payments-web.onrender.com?id=${result.data.refference}`;
             }
           });
         } else {
-          Swal.fire('Error', paymentResult.message || 'Payment Failed, Please Try Again', 'error');
+          // Update payment record in Supabase on failure
+          await supabase
+            .from('payments')
+            .update({
+              status: 'failed',
+              error_message: result.message || 'Payment failed'
+            })
+            .eq('id', paymentRecord[0].id);
+
+          Swal.fire('Error', result.message || 'Payment Failed, Please Try Again', 'error');
         }
       } catch (error) {
-        console.error('Payment error:', error);
+        console.error('Payment processing error:', error);
         loader.style.display = 'none';
         loader.setAttribute('aria-hidden', 'true');
         Swal.fire('Error', 'An Unexpected Error Occurred. Please Try Again.', 'error');
+        
+        // Log error to Supabase if possible
+        try {
+          await supabase
+            .from('payment_errors')
+            .insert([{
+              error: error.toString(),
+              phone: phone,
+              amount: amount,
+              created_at: new Date().toISOString()
+            }]);
+        } catch (supabaseError) {
+          console.error('Failed to log error to Supabase:', supabaseError);
+        }
       }
     });
-
-    // Simulated Mpesa payment function - REPLACE WITH YOUR ACTUAL PAYMENT API CALL
-    async function processMpesaPayment(phone, amount) {
-      // This is just a simulation - replace with your actual API call to your backend
-      return new Promise(resolve => {
-        setTimeout(() => {
-          // Simulate 80% success rate
-          const success = Math.random() > 0.2;
-          resolve({
-            success: success,
-            reference: success ? 'MP' + Date.now().toString().slice(-8) : null,
-            message: success ? 'Payment processed successfully' : 'Payment processing failed'
-          });
-        }, 3000); // Simulate network delay
-      });
-    }
   </script>
 </body>
 </html>
